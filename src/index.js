@@ -25,26 +25,32 @@ async function onSubmit(event) {
   event.currentTarget.value = input.value;
 
   console.log(event.currentTarget.value);
-  getImages().then(response => {
-    console.log(response);
-    const { data } = response;
-    const images = data[0];
-    // if (images.length === 0) {
-    //   return Notify.failure(
-    //     'Sorry, there are no images matching your search query. Please try again.'
-    //   );
-    // }
-    const markup = images.map(
-      ({
-        webformatURL,
-        largeImageURL,
-        tags,
-        likes,
-        views,
-        comments,
-        downloads,
-      }) =>
-        `<div class="photo-card">
+
+  const { data } = await getImages(q);
+  console.log(data);
+  createImgCard(data);
+  // if (images.length === 0) {
+  //   return Notify.failure(
+  //     'Sorry, there are no images matching your search query. Please try again.'
+  //   );
+  // }
+}
+
+function createImgCard(data) {
+  //     const images = ;
+  //   console.log(images);
+
+  const markup = data[0].map(
+    ({
+      webformatURL,
+      largeImageURL,
+      tags,
+      likes,
+      views,
+      comments,
+      downloads,
+    }) =>
+      `<div class="photo-card">
   <a class="gallery__link" href="${largeImageURL}"><img src="${webformatURL}" alt="${tags}" loading="lazy" />
   <div class="info">
     <p class="info-item">
@@ -62,9 +68,9 @@ async function onSubmit(event) {
   </div>
   </a>
 </div>`.join('')
-    );
-    gallery.innerHTML = markup;
-  });
+  );
+
+  return (gallery.insertAdjacentHTML = ('beforeend', markup));
 }
 
 async function getImages(page = 1, perPage = 40) {
