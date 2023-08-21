@@ -40,7 +40,7 @@ function createImgCard(data) {
   //     const images = ;
   //   console.log(images);
 
-  const markup = data[0].map(
+  const markup = data.hits.map(
     ({
       webformatURL,
       largeImageURL,
