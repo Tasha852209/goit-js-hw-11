@@ -62,7 +62,7 @@ function showInfo(data) {
       'Sorry, there are no images matching your search query. Please try again.'
     );
   }
-  Notify.success(`Hooray! We found ${data.totalHits} images.`);
+  Notify.success(`Hooray! We found ${data.total} images.`);
 }
 
 function createImgCard(data) {
