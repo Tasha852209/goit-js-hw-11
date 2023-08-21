@@ -101,7 +101,7 @@ function createImgCard(data) {
   lightbox.refresh();
 }
 
-async function getImages(page = 1, perPage = 40) {
+async function getImages(q, page = 1, perPage = 40) {
   q = encodeURIComponent(input.value);
   const url = `${BASE_URL}?key=${API_KEY}&q=${q}&${params}&page=${page}&per_page=${perPage}`;
   console.log(url);
@@ -135,7 +135,7 @@ function formSticky() {
   }
 }
 
-async function onLoadMore(page) {
+async function onLoadMore() {
   page += 1;
   const { data } = await getImages(q, page, perPage);
   createImgCard(data);
