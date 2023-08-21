@@ -48,7 +48,7 @@ function createImgCard(data) {
     ) => {
       return (
         acc +
-        `<div class="gallery-card">
+        `<div class="photo-card">
   <a class="gallery__link" href="${largeImageURL}"><img class="gallery__image" src="${webformatURL}" alt="${tags}" loading="lazy" />
   <div class="info">
     <p class="info-item">
