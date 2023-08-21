@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { Notify } from 'notiflix';
-import simpleLightbox from 'simplelightbox';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
+import './styles.css';
 
 const form = document.getElementById('search-form');
 const input = document.querySelector('#search-input');
@@ -11,7 +13,7 @@ console.log(BtnSubmit);
 const BASE_URL = 'https://pixabay.com/api/';
 const API_KEY = '38934914-2e944618da476a445430d3d36';
 
-const q = encodeURIComponent(input.value);
+let q = '';
 const params = new URLSearchParams({
   image_type: 'photo',
   orientation: 'horizontal',
@@ -22,13 +24,15 @@ form.addEventListener('submit', onSubmit);
 
 async function onSubmit(event) {
   event.preventDefault();
+  gallery.innerHTML = '';
   event.currentTarget.value = input.value;
 
   console.log(event.currentTarget.value);
 
   const { data } = await getImages(q);
   console.log(data);
-  createImgCard(data);
+  gallery.innerHTML = createImgCard(data);
+
   // if (images.length === 0) {
   //   return Notify.failure(
   //     'Sorry, there are no images matching your search query. Please try again.'
@@ -37,21 +41,15 @@ async function onSubmit(event) {
 }
 
 function createImgCard(data) {
-  //     const images = ;
-  //   console.log(images);
-
-  const markup = data.hits.map(
-    ({
-      webformatURL,
-      largeImageURL,
-      tags,
-      likes,
-      views,
-      comments,
-      downloads,
-    }) =>
-      `<div class="photo-card">
-  <a class="gallery__link" href="${largeImageURL}"><img src="${webformatURL}" alt="${tags}" loading="lazy" />
+  const markup = data.hits.reduce(
+    (
+      acc,
+      { webformatURL, largeImageURL, tags, likes, views, comments, downloads }
+    ) => {
+      return (
+        acc +
+        `<div class="gallery-card">
+  <a class="gallery__link" href="${largeImageURL}"><img class="gallery__image" src="${webformatURL}" alt="${tags}" loading="lazy" />
   <div class="info">
     <p class="info-item">
       <b>Likes ${likes}</b>
@@ -67,13 +65,18 @@ function createImgCard(data) {
     </p>
   </div>
   </a>
-</div>`.join('')
+</div>`
+      );
+    },
+    ''
   );
 
-  return (gallery.insertAdjacentHTML = ('beforeend', markup));
+  console.log(markup);
+  return markup;
 }
 
 async function getImages(page = 1, perPage = 40) {
+  q = encodeURIComponent(input.value);
   const url = `${BASE_URL}?key=${API_KEY}&q=${q}&${params}&page=${page}&per_page=${perPage}`;
   console.log(url);
   try {
@@ -84,3 +87,9 @@ async function getImages(page = 1, perPage = 40) {
     Notify.failure(error);
   }
 }
+
+const lightbox = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionPosition: 'bottom',
+  captionDelay: 250,
+});
