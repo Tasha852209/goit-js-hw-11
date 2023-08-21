@@ -49,7 +49,7 @@ async function onSubmit(event) {
   console.log(event.currentTarget.value);
 
   const { data } = await getImages(q);
-  console.log(data);
+  // console.log(data);
   createImgCard(data);
   showInfo(data);
   stopSearch(data);
@@ -96,7 +96,7 @@ function createImgCard(data) {
     ''
   );
 
-  console.log(markup);
+  // console.log(markup);
   gallery.insertAdjacentHTML('beforeend', markup);
   lightbox.refresh();
 }
@@ -144,7 +144,7 @@ async function onLoadMore(page) {
 }
 
 function stopSearch(data) {
-  console.log(data);
+  // console.log(data);
   if (data.hits.length < 40 && data.hits.length > 0) {
     loadMoreBtn.style.display = 'none';
     Notify.info("We're sorry, but you've reached the end of search results.");
