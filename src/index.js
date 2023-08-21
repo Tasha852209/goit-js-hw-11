@@ -15,11 +15,13 @@ const input = document.querySelector('#search-input');
 const BtnSubmit = document.querySelector("[type='submit']");
 const gallery = document.querySelector('.gallery');
 const sticky = form.offsetTop;
+const loadMoreBtn = document.querySelector('.load-more');
 
 console.log(BtnSubmit);
 const BASE_URL = 'https://pixabay.com/api/';
 const API_KEY = '38934914-2e944618da476a445430d3d36';
 
+const perPage = 40;
 let page = 1;
 let q = '';
 const params = new URLSearchParams({
@@ -30,11 +32,19 @@ const params = new URLSearchParams({
 
 form.addEventListener('submit', onSubmit);
 window.addEventListener('scroll', formSticky);
+loadMoreBtn.addEventListener('click', onLoadMore);
 
 async function onSubmit(event) {
   event.preventDefault();
   gallery.innerHTML = '';
+  loadMoreBtn.style.display = 'none';
+
   event.currentTarget.value = input.value;
+  if (!event.currentTarget.value) {
+    return Notify.failure(
+      'Sorry, the search field cannot be empty. Please enter information to search.'
+    );
+  }
 
   console.log(event.currentTarget.value);
 
@@ -42,7 +52,8 @@ async function onSubmit(event) {
   console.log(data);
   createImgCard(data);
   showInfo(data);
-  //   smoothScroll();
+  stopSearch(data);
+  // event.target.reset();
 }
 
 function showInfo(data) {
@@ -121,5 +132,24 @@ function formSticky() {
   } else {
     form.classList.remove('on-scroll');
     gallery.style.paddingTop = `24px`;
+  }
+}
+
+async function onLoadMore(page) {
+  page += 1;
+  const { data } = await getImages(q, page, perPage);
+  createImgCard(data);
+  stopSearch(data);
+  smoothScroll();
+}
+
+function stopSearch(data) {
+  console.log(data);
+  if (data.hits.length < 40 && data.hits.length > 0) {
+    loadMoreBtn.style.display = 'none';
+    Notify.info("We're sorry, but you've reached the end of search results.");
+  }
+  if (data.hits.length === 40) {
+    loadMoreBtn.style.display = 'block';
   }
 }
