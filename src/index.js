@@ -4,15 +4,23 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import './styles.css';
 
+const lightbox = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionPosition: 'bottom',
+  captionDelay: 250,
+});
+
 const form = document.getElementById('search-form');
 const input = document.querySelector('#search-input');
 const BtnSubmit = document.querySelector("[type='submit']");
 const gallery = document.querySelector('.gallery');
+const sticky = form.offsetTop;
 
 console.log(BtnSubmit);
 const BASE_URL = 'https://pixabay.com/api/';
 const API_KEY = '38934914-2e944618da476a445430d3d36';
 
+let page = 1;
 let q = '';
 const params = new URLSearchParams({
   image_type: 'photo',
@@ -21,6 +29,7 @@ const params = new URLSearchParams({
 });
 
 form.addEventListener('submit', onSubmit);
+window.addEventListener('scroll', formSticky);
 
 async function onSubmit(event) {
   event.preventDefault();
@@ -31,13 +40,18 @@ async function onSubmit(event) {
 
   const { data } = await getImages(q);
   console.log(data);
-  gallery.innerHTML = createImgCard(data);
+  createImgCard(data);
+  showInfo(data);
+  //   smoothScroll();
+}
 
-  // if (images.length === 0) {
-  //   return Notify.failure(
-  //     'Sorry, there are no images matching your search query. Please try again.'
-  //   );
-  // }
+function showInfo(data) {
+  if (data.hits.length === 0) {
+    return Notify.failure(
+      'Sorry, there are no images matching your search query. Please try again.'
+    );
+  }
+  Notify.success(`Hooray! We found ${data.totalHits} images.`);
 }
 
 function createImgCard(data) {
@@ -72,7 +86,8 @@ function createImgCard(data) {
   );
 
   console.log(markup);
-  return markup;
+  gallery.insertAdjacentHTML('beforeend', markup);
+  lightbox.refresh();
 }
 
 async function getImages(page = 1, perPage = 40) {
@@ -88,8 +103,23 @@ async function getImages(page = 1, perPage = 40) {
   }
 }
 
-const lightbox = new SimpleLightbox('.gallery a', {
-  captionsData: 'alt',
-  captionPosition: 'bottom',
-  captionDelay: 250,
-});
+function smoothScroll() {
+  const { height: cardHeight } = document
+    .querySelector('.gallery')
+    .firstElementChild.getBoundingClientRect();
+
+  window.scrollBy({
+    top: cardHeight * 3,
+    behavior: 'smooth',
+  });
+}
+
+function formSticky() {
+  if (window.scrollY > sticky) {
+    form.classList.add('on-scroll');
+    gallery.style.paddingTop = `72px`;
+  } else {
+    form.classList.remove('on-scroll');
+    gallery.style.paddingTop = `24px`;
+  }
+}
