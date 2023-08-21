@@ -75,20 +75,6 @@ button:focus {
   transform: scale(1.03);
 }
 
-#myBtn {
-  display: none;
-  position: fixed;
-  bottom: 10px;
-  right: 10px;
-  z-index: 1;
-  font-size: 18px;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  padding: 15px;
-  border-radius: 50%;
-}
-
 #search-input {
   border-radius: 4px;
   margin: 0 auto 0 auto;
