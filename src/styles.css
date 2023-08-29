@@ -38,30 +38,13 @@ p {
   margin: 0;
 }
 
-/* .photo-card {
-  position: relative;
-  box-shadow: 5px 2px 2px rgb(14, 14, 14, 0.3);
-} */
-
-.gallery__image {
-  border: transparent;
-  transition: transform var(--animation-duration) var(--timing-function);
-}
-
-.gallery__link {
-  display: block;
-  text-decoration: none;
-}
-
-.gallery__link:hover {
-  cursor: zoom-in;
-}
-
 button {
+  color: white;
   border: transparent;
   border-radius: 10px;
   cursor: pointer;
-  background: rgb(185, 127, 224);
+
+  background: rgb(190, 127, 232);
   box-shadow: 3px 2px 2px rgb(14, 14, 14, 0.3);
   margin: 20 auto 0 auto;
   padding: 8px 20px;
@@ -69,6 +52,7 @@ button {
 
 button:hover,
 button:active {
+  color: rgb(92, 150, 188);
   background: rgb(250, 250, 250);
   transform: scale(1.03);
 }
@@ -116,6 +100,20 @@ button:active {
   flex-wrap: wrap;
   gap: 10px;
   justify-content: center;
+}
+
+.gallery__image {
+  border: transparent;
+  transition: transform var(--animation-duration) var(--timing-function);
+}
+
+.gallery__link {
+  display: block;
+  text-decoration: none;
+}
+
+.gallery__link:hover {
+  cursor: zoom-in;
 }
 
 .photo-card {
